@@ -1,9 +1,15 @@
+import argparse
 import time
 import requests
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
+
+parser = argparse.ArgumentParser()
+parser.add_argument("watched_file")
+args = parser.parse_args()
+watched_file = args.watched_file
 
 base_url = "https://discord.com/api/v10"
 token = os.environ.get("TOKEN")
@@ -32,14 +38,15 @@ def send_dm(user_id: str, text: str):
 
 file_contents = None
 while True:
-    with open("data.txt", "r") as data_file:
+    with open(watched_file, "r") as data_file:
         new_data = data_file.read()
-        if file_contents != None and new_data != file_contents:
-            print("sending message")
-            send_dm(user_id, new_data)
-        else: 
-            print("no changes")
-        file_contents = new_data
+        
+    if file_contents != None and new_data != file_contents:
+        print("sending message")
+        send_dm(user_id, new_data)
+    else: 
+        print("no changes")
+    file_contents = new_data
             
     time.sleep(5)
 
